@@ -8,9 +8,9 @@ window.requestAnimFrame = this.requestAnimFrame = (function() {
 window.onload = function() {
 	var canvas = document.getElementById("canvas"),
 		context = canvas.getContext("2d"),
-		rect1 = new Rect(new Vector2d(80, 150), 100, 100),
-		rect2 = new Rect(new Vector2d(250, 70), 50, 50),
-		objs = [rect1, rect2],
+		rect = new Rect(new Vector2d(80, 150), 100, 100, 45),
+		circle = new Circle(new Vector2d(220, 160), 30),
+		objs = [rect, circle],
 		dragObj, dragOffset;
 
 	function getPoint(e) {
@@ -55,13 +55,35 @@ window.onload = function() {
 		dragObj && (dragObj = null);
 	}, false);
 
-
-	function checkCollision(rect1, rect2) {
-		if ((rect2.center.x + rect2.width / 2 < rect1.center.x - rect1.width / 2) || (rect1.center.x + rect1.width / 2 < rect2.center.x - rect2.width / 2) || (rect2.center.y + rect2.height / 2 < rect1.center.y - rect1.height / 2) || (rect1.center.y + rect1.height / 2 < rect2.center.y - rect2.height / 2)) {
-			return false;
-		} else {
-			return true;
+	window.addEventListener("keydown", function(e) {
+		var keycode = e.which;
+		switch (keycode) {
+		case 82:
+			rect.deg += 5;
+			break;
+		default:
+			break;
 		}
+	});
+
+
+	function checkCollision(rect, circle) {
+		var vertexs = rect.getPoints(),
+			closestDist, closestVertex;
+
+		vertexs.forEach(function(v) {
+			var dist = Util.distance(v, circle.center);
+			if (closestDist == null || closestDist > dist) {
+				closestVertex = v;
+				closestDist = dist;
+			}
+		});
+
+		var axis = new Vector2d(circle.center.x - closestVertex.x, circle.center.y - closestVertex.y).unitVector,
+			maxminR = rect.getMaxMinProjection(axis),
+			maxminC = circle.getMaxMinProjection(axis);
+
+		return !(maxminR.max < maxminC.min || maxminC.max < maxminR.min)
 	};
 
 	context.font = "20px Calibri";
@@ -73,7 +95,7 @@ window.onload = function() {
 			o.draw(context);
 		});
 
-		if (checkCollision(rect1, rect2)) {
+		if (checkCollision(rect, circle)) {
 			context.fillText("Collision", 10, 20);
 		} else {
 			context.fillText("Separated", 10, 20);

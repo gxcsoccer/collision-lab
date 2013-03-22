@@ -19,9 +19,14 @@ Rect.prototype = {
 		prePoint && context.lineTo(points[0].x, points[0].y);
 		context.stroke();
 		context.closePath();
+		context.beginPath();
 		context.arc(this.center.x, this.center.y, 8, 0, Math.PI * 2, false);
 		context.fill();
+		context.closePath();
 	},
+	/**
+	 * 获取矩形四个顶点的向量
+	 */
 	getPoints: function() {
 		var points = [],
 			uv1 = Vector2d.unitVector(this.deg),
@@ -40,7 +45,35 @@ Rect.prototype = {
 			return new Vector2d(p.dotProduct(uv3), p.dotProduct(uv4));
 		});
 	},
+	/**
+	 * 获取和矩形4条边分别平行的两个向量
+	 */
 	getVectors: function() {
+		var points = this.getPoints(),
+			v1 = new Vector2d(points[1].x - points[0].x, points[1].y - points[0].y),
+			v2 = new Vector2d(points[3].x - points[0].x, points[3].y - points[0].y);
 
+		return [v1, v2];
+	},
+	/**
+	 * 获取矩形四个顶点在某条轴上的最大和最小投影值
+	 */
+	getMaxMinProjection: function(axis) {
+		var points = this.getPoints(),
+			max, min;
+
+		points.forEach(function(p) {
+			var pj = p.dotProduct(axis);
+			(min == null || min > pj) && (min = pj);
+			(max == null || max < pj) && (max = pj);
+		});
+
+		return {
+			max: max,
+			min: min
+		};
+	},
+	isDraggable: function(point) {
+		return Util.distance(point, this.center) <= 8;
 	}
 }
