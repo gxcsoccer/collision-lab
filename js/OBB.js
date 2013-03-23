@@ -33,7 +33,7 @@ window.onload = function() {
 	canvas.addEventListener("mousedown", function(e) {
 		var mp = getPoint(e);
 		objs.forEach(function(o) {
-			if (o.isDraggable(mp)) {
+			if (o.containPoint(mp)) {
 				dragObj = o;
 				dragOffset = {
 					x: mp.x - o.center.x,

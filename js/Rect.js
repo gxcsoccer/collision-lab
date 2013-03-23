@@ -19,10 +19,6 @@ Rect.prototype = {
 		prePoint && context.lineTo(points[0].x, points[0].y);
 		context.stroke();
 		context.closePath();
-		context.beginPath();
-		context.arc(this.center.x, this.center.y, 8, 0, Math.PI * 2, false);
-		context.fill();
-		context.closePath();
 	},
 	/**
 	 * 获取矩形四个顶点的向量
@@ -73,7 +69,27 @@ Rect.prototype = {
 			min: min
 		};
 	},
-	isDraggable: function(point) {
-		return Util.distance(point, this.center) <= 8;
+	/**
+	 * 是否包含一个点
+	 */
+	containPoint: function(point) {
+		var normals = this.getVectors().map(function(v) {
+			return v.leftNormal.unitVector;
+		}),
+			dotV = new Vector2d(point.x, point.y),
+			rect = this,
+			isContain = true;
+
+		normals.forEach(function(axis) {
+			var maxmin = rect.getMaxMinProjection(axis),
+				cpj = dotV.dotProduct(axis);
+
+			if (cpj < maxmin.min || cpj > maxmin.max) {
+				isContain = false;
+				return false;
+			}
+		});
+
+		return isContain;
 	}
 }

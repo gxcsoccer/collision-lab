@@ -10,6 +10,9 @@ Circle.prototype = {
 		context.stroke();
 		context.closePath();
 	},
+	/**
+	 * 圆形在某条轴上的最大和最小投影值
+	 */
 	getMaxMinProjection: function(axis) {
 		var pj = this.center.dotProduct(axis);
 
@@ -18,7 +21,10 @@ Circle.prototype = {
 			min: pj - this.radius
 		}
 	},
-	isDraggable: function(point) {
+	/**
+	 * 是否包含一个点
+	 */
+	containPoint: function(point) {
 		return Util.distance(point, this.center) <= this.radius;
 	}
 };
