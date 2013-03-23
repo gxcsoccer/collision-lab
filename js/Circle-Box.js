@@ -68,22 +68,24 @@ window.onload = function() {
 
 
 	function checkCollision(rect, circle) {
-		var vertexs = rect.getPoints(),
-			closestDist, closestVertex;
+		var r2 = Util.sqr(circle.radius),
+			normals = rect.getVectors().map(function(v) {
+				return v.leftNormal.unitVector;
+			}),
+			distMin = 0;
 
-		vertexs.forEach(function(v) {
-			var dist = Util.distance(v, circle.center);
-			if (closestDist == null || closestDist > dist) {
-				closestVertex = v;
-				closestDist = dist;
+		normals.forEach(function(axis) {
+			var maxmin = rect.getMaxMinProjection(axis),
+				cpj = circle.center.dotProduct(axis);
+
+			if (cpj < maxmin.min) {
+				distMin += Util.sqr(cpj - maxmin.min);
+			} else if (cpj > maxmin.max) {
+				distMin += Util.sqr(cpj - maxmin.max);
 			}
 		});
 
-		var axis = new Vector2d(circle.center.x - closestVertex.x, circle.center.y - closestVertex.y).unitVector,
-			maxminR = rect.getMaxMinProjection(axis),
-			maxminC = circle.getMaxMinProjection(axis);
-
-		return !(maxminR.max < maxminC.min || maxminC.max < maxminR.min)
+		return distMin <= r2;
 	};
 
 	context.font = "20px Calibri";
