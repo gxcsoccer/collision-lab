@@ -1,8 +1,11 @@
-var Rect = function(center, width, height, deg) {
+var Rect = function(center, width, height, deg, velocity) {
 		this.center = center;
 		this.width = width;
 		this.height = height;
 		this.deg = deg || 0;
+		this.color = "blue";
+
+		this.velocity = velocity || new Vector2d(0, 0);
 	}
 
 Rect.prototype = {
@@ -10,15 +13,26 @@ Rect.prototype = {
 		var points = this.getPoints(),
 			prePoint;
 
+		context.save();
 		context.beginPath();
 		points.forEach(function(p) {
-			prePoint && context.lineTo(p.x, p.y);
-			context.moveTo(p.x, p.y);
+			if (prePoint) {
+				context.lineTo(p.x, p.y);
+			} else {
+				context.moveTo(p.x, p.y);
+			}
 			prePoint = p;
 		});
 		prePoint && context.lineTo(points[0].x, points[0].y);
-		context.stroke();
 		context.closePath();
+		context.fillStyle = this.color;
+		context.fill();
+		context.stroke();
+		context.restore();
+	},
+	update: function(timespan) {
+		this.center.x += timespan * this.velocity.x;
+		this.center.y += timespan * this.velocity.y;
 	},
 	/**
 	 * 获取矩形四个顶点的向量

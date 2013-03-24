@@ -89,19 +89,20 @@ window.onload = function() {
 	};
 
 	context.font = "20px Calibri";
+	context.globalCompositeOperation = "lighter";
 
 	function draw(context) {
 		context.clearRect(0, 0, 400, 300);
-
-		objs.forEach(function(o) {
-			o.draw(context);
-		});
 
 		if (checkCollision(rect, circle)) {
 			context.fillText("Collision", 10, 20);
 		} else {
 			context.fillText("Separated", 10, 20);
 		}
+
+		objs.forEach(function(o) {
+			o.draw(context);
+		});
 
 		requestAnimFrame(function() {
 			draw(context);
