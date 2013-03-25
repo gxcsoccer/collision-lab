@@ -105,5 +105,20 @@ Rect.prototype = {
 		});
 
 		return isContain;
+	},
+	/**
+	 * 检测指定的法线是否可以被用作分离轴
+	 */
+	isSAT: function(normal) {
+		var points = this.getPoints(),
+			len = points.length;
+
+		for(var i = 0; i < len; i++) {
+			if(points[i].dotProduct(normal) < 0) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 }
