@@ -71,22 +71,21 @@ window.onload = function() {
 
 
 	function checkCollision(rect1, rect2) {
-		var normals_1 = rect1.getVectors().map(function(v) {
-			return v.leftNormal.unitVector;
-		}),
-			normals_2 = rect2.getVectors().map(function(v) {
-				return v.leftNormal.unitVector;
-			}),
-			i;
+		var points_1 = rect1.getPoints(),
+			points_2 = rect2.getPoints(),
+			i = 0,
+			normal;
 
-		for (i = 0; i < normals_1.length; i++) {
-			if (rect2.isSAT(normals_1[i])) {
+		for(; i < 4; i++) {
+			normal = points_1[i].minus(points_1[(i + 3) % 4]).leftNormal.unitVector;
+			if(rect2.isSAT(normal, points_1[i])) {
 				return false;
 			}
 		}
 
-		for (i = 0; i < normals_2.length; i++) {
-			if (rect1.isSAT(normals_2[i])) {
+		for(i = 0; i < 4; i++) {
+			normal = points_2[i].minus(points_2[(i + 3) % 4]).leftNormal.unitVector;
+			if(rect1.isSAT(normal, points_2[i])) {
 				return false;
 			}
 		}

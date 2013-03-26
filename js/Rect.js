@@ -109,12 +109,12 @@ Rect.prototype = {
 	/**
 	 * 检测指定的法线是否可以被用作分离轴
 	 */
-	isSAT: function(normal) {
+	isSAT: function(normal, point) {
 		var points = this.getPoints(),
 			len = points.length;
 
 		for(var i = 0; i < len; i++) {
-			if(points[i].dotProduct(normal) < 0) {
+			if(points[i].minus(point).dotProduct(normal) < 0) {
 				return false;
 			}
 		}
