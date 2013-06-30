@@ -34,6 +34,16 @@ Rectangle.prototype.rotate = function(angle) {
 	return this;
 };
 
+Rectangle.prototype.move = function(v) {
+	this.topLeft = this.topLeft.add(v);
+	this.topRight = this.topRight.add(v);
+	this.bottomRight = this.bottomRight.add(v);
+	this.bottomLeft = this.bottomLeft.add(v);
+
+	return this;
+
+};
+
 Rectangle.prototype.draw = function(context) {
 	context.save();
 	context.translate(this.topLeft.x, this.topLeft.y);

@@ -14,7 +14,7 @@ window.onload = function() {
 		b = -1,
 		angularB = -7;
 
-	rect.velocity = new Vector2d(0, 2),
+	rect.velocity = new Vector2d(0, 2);
 
 	var loop = function(dt) {
 			var f = new Vector2d(0, 0);
@@ -40,7 +40,7 @@ window.onload = function() {
 
 			/* Finish Velocity Verlet */
 			var new_a = f.scale(rect.mass);
-			var dv = rect.a.add(new_a).scale(0.5 * dt);
+			var dv = rect.acceleration.add(new_a).scale(0.5 * dt);
 			rect.velocity = rect.velocity.add(dv);
 
 			/* Do rotation; let's just use Euler for contrast */
@@ -65,4 +65,5 @@ window.onload = function() {
 			context.closePath();
 		};
 
+	loop();
 }
