@@ -7,16 +7,31 @@ window.requestAnimFrame = this.requestAnimFrame = (function() {
 
 window.onload = function() {
 	var canvas = document.getElementById("canvas"),
+		canvasWidth = canvas.width,
+		canvasHeight = canvas.height,
 		context = canvas.getContext("2d"),
 		rect = new Rectangle(200, 0, 100, 50),
 		spring = new Vector2d(200, 0),
 		stiffness = 0.5,
 		b = -1,
-		angularB = -7;
+		angularB = -5;
 
 	rect.velocity = new Vector2d(0, 2);
 
-	var loop = function(dt) {
+	var lastTimespan = 0;
+	var loop = function(timespan) {
+			timespan = timespan || 0;
+			var dt = (timespan - lastTimespan) / 1000; 
+			lastTimespan = timespan;
+			// var now = new Date();
+			// lastTimespan = lastTimespan || now;
+			// var dt = (now - lastTimespan) / 1000;
+			// lastTimespan = now;
+			// console.log(dt);
+			//var dt = 0.02;
+			//dt = dt || 0.02;
+			console.log(dt);
+
 			var f = new Vector2d(0, 0);
 			var torque = 0;
 
@@ -56,6 +71,8 @@ window.onload = function() {
 		};
 
 	var draw = function() {
+			context.clearRect(0, 0, canvasWidth, canvasHeight);
+
 			rect.draw(context);
 
 			context.beginPath();
