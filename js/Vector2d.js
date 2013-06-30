@@ -34,6 +34,21 @@ Vector2d.prototype = {
 	minus: function(vector) {
 		return new Vector2d(this.x - vector.x, this.y - vector.y);
 	},
+	scale: function(s) {
+		return new Vector2d(this.x * s, this.y * s);
+	},
+	rotate: function(angle, axis) {
+		var x = this.x - axis.x;
+		var y = this.y - axis.y;
+
+		var x_prime = axis.x + ((x * Math.cos(angle)) - (y * Math.sin(angle)));
+		var y_prime = axis.y + ((x * Math.sin(angle)) + (y * Math.cos(angle)));
+
+		return new Vector2d(x_prime, y_prime);
+	},
+	cross: function(vector) {
+		return (this.x * vector.y - this.y * vector.x);
+	},
 	/**
 	 * 向量左法线
 	 */
